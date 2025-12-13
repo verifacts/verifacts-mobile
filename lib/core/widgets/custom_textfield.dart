@@ -148,8 +148,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
             decoration: InputDecoration(
               errorMaxLines: 1,
               errorStyle: AppTextStyles.medium.copyWith(color: AppColors.error),
-              fillColor: const Color(0xFF131313),
-              hoverColor: const Color(0xFF131313),
+              fillColor: Colors.transparent, // const Color(0xFF131313),
+              hoverColor: Colors.transparent, // const Color(0xFF131313),
               filled: true,
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 15,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:verifacts/core/ui/ui.dart';
 
-import 'loader.dart';
 
 class PrimaryButton extends StatefulWidget {
   final bool active;
@@ -123,7 +122,7 @@ class _PrimaryButtonState extends State<PrimaryButton>
                           end: 0.0,
                         )
                   : widget.child!)
-            : whiteLoader,
+            : null,
       ),
     );
   }

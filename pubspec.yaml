@@ -21,9 +21,8 @@ dependencies:
 
   flex_color_scheme:
   flutter_animate:
-  flutter_launcher_icons:
-  flutter_native_splash:
-  flutter_spinkit:
+  # flutter_launcher_icons:
+  # flutter_native_splash:
 
 
   iconsax_plus:
