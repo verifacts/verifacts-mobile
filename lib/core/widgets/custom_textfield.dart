@@ -148,14 +148,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
             decoration: InputDecoration(
               errorMaxLines: 1,
               errorStyle: AppTextStyles.medium.copyWith(color: AppColors.error),
-              fillColor: widget.fillColor ?? AppColors.normal,
+              fillColor: const Color(0xFF131313),
+              hoverColor: const Color(0xFF131313),
               filled: true,
-              contentPadding:
-                  widget.padding ??
-                  EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: widget.maxLines == 1 ? 5 : 15,
-                  ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 15,
+                horizontal: 5,
+              ),
               prefixIcon: widget.prefix != null
                   ? SizedBox(
                       height: kMinInteractiveDimension,
@@ -170,26 +169,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       child: Center(child: widget.suffix),
                     )
                   : null,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: widget.disableFocusedBorder
-                      ? widget.disabledFocusedBorderColor!
-                      : widget.borderColor ?? AppColors.primary,
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: widget.borderColor ?? AppColors.border,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: widget.borderColor ?? AppColors.border,
-                ),
-              ),
+              focusedBorder: InputBorder.none,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
               hintText: widget.hint,
               hintStyle:
                   widget.hintStyle ??

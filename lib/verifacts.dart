@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:verifacts/core/ui/themes.dart';
@@ -5,7 +6,9 @@ import 'package:verifacts/core/utils/responsive.dart';
 import 'package:verifacts/pages/verify_fact.dart';
 
 class Verifacts extends StatefulWidget {
- const Verifacts({super.key});
+  const Verifacts({super.key});
+
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   State<Verifacts> createState() => _VerifactsState();
@@ -16,12 +19,14 @@ class _VerifactsState extends State<Verifacts> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Verifacts",
+      navigatorKey: Verifacts.navigatorKey,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       theme: themeData,
       builder: (context, child) {
+        child = DevicePreview.appBuilder(context, child);
         return ResponsiveBreakpoints.builder(
-          child: child!,
+          child: child,
           breakpoints: [
             const Breakpoint(
               start: 0,

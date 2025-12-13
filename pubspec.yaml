@@ -16,6 +16,7 @@ dependencies:
 
 
 
+  device_preview:
   dio:
 
   flex_color_scheme:
@@ -27,9 +28,12 @@ dependencies:
 
   iconsax_plus:
 
+  logger:
+
   responsive_framework:
 
   share_handler:
+  skeletonizer: 
 
   url_launcher:
 
@@ -45,7 +49,7 @@ flutter_icons:
   image_path_android: "assets/images/logo a.png"
   image_path_ios: "assets/images/logo a.png"
   android: true
-  ios: true
+  ios: false
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/images/logo a.png"
   min_sdk_android: 23
@@ -53,14 +57,14 @@ flutter_icons:
 
 
 flutter_native_splash:
-  color: "#FFFFFF"
+  color: "#1A4172"
   image: "assets/images/logo a.png"
   android: true
   ios: true
 
   android_12:
     image: "assets/images/logo b.png"
-    color: "#FFFFFF"
+    color: "#1A4172"
 
 flutter:
 
