@@ -106,28 +106,21 @@ class _ResultsState extends State<Results> {
         child: Column(
           children: [
             // Header
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 8, right: 16),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
-                      IconsaxPlusBroken.arrow_left,
-                      color: Colors.white,
-                      size: 26,
-                    ),
-                  ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.2),
-                  const Spacer(),
-                  Image.asset(
-                    "assets/images/logo_transparent.png",
-                    width: 40,
-                  ).animate().fadeIn(duration: 400.ms),
-                ],
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8, top: 8, right: 16),
+                child: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(
+                    IconsaxPlusBroken.arrow_left,
+                    color: Colors.white,
+                    size: 26,
+                  ),
+                ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.2),
               ),
             ),
             const SizedBox(height: 8),
-
             // Content
             Expanded(
               child: Skeletonizer(
@@ -141,6 +134,19 @@ class _ResultsState extends State<Results> {
                         .fadeIn(duration: 500.ms, delay: 100.ms)
                         .slideY(begin: 0.1),
                     const SizedBox(height: 24),
+
+                    // Input section
+                    if (widget.text != null || widget.url != null) ...[
+                      const SectionTitle(title: 'Input')
+                          .animate()
+                          .fadeIn(duration: 400.ms, delay: 500.ms),
+                      const SizedBox(height: 12),
+                      InputCard(text: widget.text, url: widget.url)
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 550.ms)
+                          .slideY(begin: 0.05),
+                      const SizedBox(height: 40),
+                    ],
 
                     // Source Trustworthiness
                     const SectionTitle(title: 'Source')
@@ -193,7 +199,6 @@ class _ResultsState extends State<Results> {
                             ),
                           ),
                     ],
-
                     const SizedBox(height: 40),
                   ],
                 ),

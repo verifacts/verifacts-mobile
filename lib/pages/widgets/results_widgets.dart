@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:verifacts/core/models/analysis.dart';
 import 'package:verifacts/core/ui/ui.dart';
@@ -41,72 +42,67 @@ class InputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (text != null && text!.isNotEmpty) ...[
-            Row(
-              children: [
-                Icon(
-                  Icons.text_fields_rounded,
-                  color: AppColors.primary,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Text',
-                  style: AppTextStyles.semiBold.copyWith(
-                    fontSize: FontSizes.bodyMedium(context),
-                    color: AppColors.primary,
+    return Skeleton.ignore(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (text != null && text!.isNotEmpty) ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    IconsaxPlusLinear.text,
+                    color: Colors.white.withValues(alpha: 0.4),
+                    size: 16,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              text!,
-              style: AppTextStyles.medium.copyWith(
-                fontSize: FontSizes.bodyMedium(context),
-                color: Colors.white.withValues(alpha: 0.8),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      text!,
+                      style: AppTextStyles.regular.copyWith(
+                        fontSize: FontSizes.bodyMedium(context),
+                        color: Colors.white.withValues(alpha: 0.7),
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            if (url != null && url!.isNotEmpty) const SizedBox(height: 16),
-          ],
-          if (url != null && url!.isNotEmpty) ...[
-            Row(
-              children: [
-                Icon(Icons.link_rounded, color: AppColors.primary, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'URL',
-                  style: AppTextStyles.semiBold.copyWith(
-                    fontSize: FontSizes.bodyMedium(context),
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () => _launchUrl(context, url!),
-              child: Text(
-                url!,
-                style: AppTextStyles.medium.copyWith(
-                  fontSize: FontSizes.bodySmall(context),
-                  color: AppColors.primary,
-                  decoration: TextDecoration.underline,
+              if (url != null && url!.isNotEmpty) const SizedBox(height: 12),
+            ],
+            if (url != null && url!.isNotEmpty) ...[
+              GestureDetector(
+                onTap: () => _launchUrl(context, url!),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      IconsaxPlusLinear.link_2,
+                      color: AppColors.primary.withValues(alpha: 0.6),
+                      size: 16,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        url!,
+                        style: AppTextStyles.regular.copyWith(
+                          fontSize: FontSizes.bodySmall(context),
+                          color: AppColors.primary.withValues(alpha: 0.7),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -220,17 +216,20 @@ class RedFlagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        flag.replaceAll('_', ' '),
-        style: AppTextStyles.medium.copyWith(
-          fontSize: FontSizes.bodySmall(context),
-          color: AppColors.error.withValues(alpha: 0.9),
+    return Skeleton.ignore(
+      ignore: true,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.error.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          flag.replaceAll('_', ' '),
+          style: AppTextStyles.medium.copyWith(
+            fontSize: FontSizes.bodySmall(context),
+            color: AppColors.error.withValues(alpha: 0.9),
+          ),
         ),
       ),
     );
