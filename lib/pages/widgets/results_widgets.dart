@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:verifacts/core/models/analysis.dart';
 import 'package:verifacts/core/ui/ui.dart';
@@ -12,9 +13,10 @@ class SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: AppTextStyles.bold.copyWith(
-        fontSize: FontSizes.h3(context),
-        color: Colors.white,
+      style: AppTextStyles.semiBold.copyWith(
+        fontSize: FontSizes.bodyLarge(context),
+        color: Colors.white.withValues(alpha: 0.6),
+        letterSpacing: 0.5,
       ),
     );
   }
@@ -115,111 +117,88 @@ class SourceIdentityCard extends StatelessWidget {
 
   const SourceIdentityCard({super.key, required this.source});
 
-  String getTrustLevelEmoji(String trustLevel) {
+  Color getTrustColor(String trustLevel) {
     switch (trustLevel.toLowerCase()) {
       case 'high':
-        return '✅';
+        return AppColors.success;
       case 'medium':
-        return '⚠️';
+        return Colors.orange;
       case 'low':
-        return '❌';
+        return AppColors.error;
       default:
-        return '❓';
+        return AppColors.grey;
+    }
+  }
+
+  IconData getTrustIcon(String trustLevel) {
+    switch (trustLevel.toLowerCase()) {
+      case 'high':
+        return IconsaxPlusBold.shield_tick;
+      case 'medium':
+        return IconsaxPlusBold.shield;
+      case 'low':
+        return IconsaxPlusBold.shield_cross;
+      default:
+        return IconsaxPlusBold.shield;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final trustColor = getTrustColor(source.trustLevel);
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white.withValues(alpha: 0.1),
-            Colors.white.withValues(alpha: 0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      getTrustLevelEmoji(source.trustLevel),
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      source.trustLevel.toUpperCase(),
-                      style: AppTextStyles.bold.copyWith(
-                        fontSize: FontSizes.bodySmall(context),
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
+              Icon(
+                getTrustIcon(source.trustLevel),
+                color: trustColor,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                source.trustLevel.toUpperCase(),
+                style: AppTextStyles.semiBold.copyWith(
+                  fontSize: FontSizes.bodySmall(context),
+                  color: trustColor,
                 ),
               ),
               const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
+              Text(
+                '${source.score.toInt()}',
+                style: AppTextStyles.bold.copyWith(
+                  fontSize: FontSizes.h3(context),
+                  color: Colors.white,
                 ),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.star_rounded,
-                      color: AppColors.primary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${source.score}/100',
-                      style: AppTextStyles.bold.copyWith(
-                        fontSize: FontSizes.bodyMedium(context),
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
+              ),
+              Text(
+                '/100',
+                style: AppTextStyles.medium.copyWith(
+                  fontSize: FontSizes.bodySmall(context),
+                  color: Colors.white.withValues(alpha: 0.5),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             source.summary,
-            style: AppTextStyles.medium.copyWith(
+            style: AppTextStyles.regular.copyWith(
               fontSize: FontSizes.bodyMedium(context),
-              color: Colors.white.withValues(alpha: 0.9),
+              color: Colors.white.withValues(alpha: 0.8),
               height: 1.5,
             ),
           ),
           if (source.redFlags.isNotEmpty) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -242,25 +221,17 @@ class RedFlagChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+        color: AppColors.error.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.flag_rounded, color: AppColors.error, size: 14),
-          const SizedBox(width: 6),
-          Text(
-            flag.replaceAll('_', ' '),
-            style: AppTextStyles.medium.copyWith(
-              fontSize: FontSizes.bodySmall(context),
-              color: AppColors.error,
-            ),
-          ),
-        ],
+      child: Text(
+        flag.replaceAll('_', ' '),
+        style: AppTextStyles.medium.copyWith(
+          fontSize: FontSizes.bodySmall(context),
+          color: AppColors.error.withValues(alpha: 0.9),
+        ),
       ),
     );
   }
@@ -288,14 +259,14 @@ class OverallVerdictCard extends StatelessWidget {
   IconData getVerdictIcon(String verdict) {
     switch (verdict.toLowerCase()) {
       case 'verified':
-        return Icons.check_circle_rounded;
+        return IconsaxPlusBold.tick_circle;
       case 'debunked':
-        return Icons.cancel_rounded;
+        return IconsaxPlusBold.close_circle;
       case 'unverified':
       case 'mixed':
-        return Icons.help_rounded;
+        return IconsaxPlusBold.warning_2;
       default:
-        return Icons.info_rounded;
+        return IconsaxPlusBold.info_circle;
     }
   }
 
@@ -304,76 +275,102 @@ class OverallVerdictCard extends StatelessWidget {
     final verdictColor = getVerdictColor(verdict.overallVerdict);
     final verdictIcon = getVerdictIcon(verdict.overallVerdict);
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            verdictColor.withValues(alpha: 0.15),
-            verdictColor.withValues(alpha: 0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: verdictColor.withValues(alpha: 0.4),
-          width: 1.5,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(verdictIcon, color: verdictColor, size: 32),
-              const SizedBox(width: 12),
-              Text(
-                verdict.overallVerdict.toUpperCase(),
-                style: AppTextStyles.bold.copyWith(
-                  fontSize: FontSizes.h3(context),
-                  color: verdictColor,
-                ),
-              ),
-            ],
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        Icon(verdictIcon, color: verdictColor, size: 64),
+        const SizedBox(height: 16),
+        Text(
+          verdict.overallVerdict.toUpperCase(),
+          style: AppTextStyles.bold.copyWith(
+            fontSize: FontSizes.h1(context),
+            color: verdictColor,
+            letterSpacing: 1,
           ),
-          const SizedBox(height: 16),
-          if (verdict.summary.isNotEmpty &&
-              verdict.summary != 'No summary available')
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                verdict.summary,
-                style: AppTextStyles.medium.copyWith(
-                  fontSize: FontSizes.bodyMedium(context),
-                  color: Colors.white.withValues(alpha: 0.9),
-                  height: 1.5,
-                ),
-              ),
+        ),
+        if (verdict.summary.isNotEmpty &&
+            verdict.summary != 'No summary available') ...[
+          const SizedBox(height: 12),
+          Text(
+            verdict.summary,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.regular.copyWith(
+              fontSize: FontSizes.bodyMedium(context),
+              color: Colors.white.withValues(alpha: 0.7),
+              height: 1.5,
             ),
-          Row(
-            children: [
-              StatChip(
-                label: 'Total',
-                value: verdict.totalClaims.toString(),
-                color: AppColors.primary,
-              ),
-              const SizedBox(width: 12),
-              StatChip(
-                label: 'Verified',
-                value: verdict.verifiedCount.toString(),
-                color: AppColors.success,
-              ),
-              const SizedBox(width: 12),
-              StatChip(
-                label: 'Debunked',
-                value: verdict.debunkedCount.toString(),
-                color: AppColors.error,
-              ),
-            ],
           ),
         ],
-      ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _StatItem(
+              value: verdict.totalClaims.toString(),
+              label: 'Claims',
+              color: Colors.white,
+            ),
+            Container(
+              width: 1,
+              height: 32,
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              color: Colors.white.withValues(alpha: 0.2),
+            ),
+            _StatItem(
+              value: verdict.verifiedCount.toString(),
+              label: 'Verified',
+              color: AppColors.success,
+            ),
+            Container(
+              width: 1,
+              height: 32,
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              color: Colors.white.withValues(alpha: 0.2),
+            ),
+            _StatItem(
+              value: verdict.debunkedCount.toString(),
+              label: 'Debunked',
+              color: AppColors.error,
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final String value;
+  final String label;
+  final Color color;
+
+  const _StatItem({
+    required this.value,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: AppTextStyles.bold.copyWith(
+            fontSize: FontSizes.h2(context),
+            color: color,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: AppTextStyles.medium.copyWith(
+            fontSize: FontSizes.bodySmall(context),
+            color: Colors.white.withValues(alpha: 0.5),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -445,14 +442,14 @@ class ClaimCard extends StatelessWidget {
   IconData getVerdictIcon(String verdict) {
     switch (verdict.toLowerCase()) {
       case 'verified':
-        return Icons.check_circle_rounded;
+        return IconsaxPlusBold.tick_circle;
       case 'debunked':
-        return Icons.cancel_rounded;
+        return IconsaxPlusBold.close_circle;
       case 'unverified':
       case 'mixed':
-        return Icons.help_rounded;
+        return IconsaxPlusBold.warning_2;
       default:
-        return Icons.info_rounded;
+        return IconsaxPlusBold.info_circle;
     }
   }
 
@@ -476,20 +473,16 @@ class ClaimCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: verdictColor.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          leading: Icon(verdictIcon, color: verdictColor, size: 24),
+          leading: Icon(verdictIcon, color: verdictColor, size: 22),
           title: Text(
             claim.claim,
-            style: AppTextStyles.semiBold.copyWith(
+            style: AppTextStyles.medium.copyWith(
               fontSize: FontSizes.bodyMedium(context),
               color: Colors.white,
             ),
@@ -498,56 +491,36 @@ class ClaimCard extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8),
             child: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: verdictColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    claim.verdict.toUpperCase(),
-                    style: AppTextStyles.bold.copyWith(
-                      fontSize: FontSizes.bodySmall(context),
-                      color: verdictColor,
-                    ),
+                Text(
+                  claim.verdict.toUpperCase(),
+                  style: AppTextStyles.semiBold.copyWith(
+                    fontSize: FontSizes.bodySmall(context),
+                    color: verdictColor,
                   ),
                 ),
                 const SizedBox(width: 12),
-                Icon(Icons.speed_rounded, color: AppColors.primary, size: 16),
-                const SizedBox(width: 4),
                 Text(
-                  '${claim.confidence}% confidence',
+                  '${claim.confidence}%',
                   style: AppTextStyles.medium.copyWith(
                     fontSize: FontSizes.bodySmall(context),
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
                 ),
               ],
             ),
           ),
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Text(
               claim.explanation,
-              style: AppTextStyles.medium.copyWith(
+              style: AppTextStyles.regular.copyWith(
                 fontSize: FontSizes.bodyMedium(context),
-                color: Colors.white.withValues(alpha: 0.8),
+                color: Colors.white.withValues(alpha: 0.7),
                 height: 1.5,
               ),
             ),
             if (claim.sources.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Text(
-                'Sources:',
-                style: AppTextStyles.semiBold.copyWith(
-                  fontSize: FontSizes.bodyMedium(context),
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: 8),
               ...claim.sources.map(
                 (source) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -556,18 +529,17 @@ class ClaimCard extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.link_rounded,
-                          color: AppColors.primary,
-                          size: 16,
+                          IconsaxPlusLinear.link_2,
+                          color: AppColors.primary.withValues(alpha: 0.8),
+                          size: 14,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             source,
-                            style: AppTextStyles.medium.copyWith(
+                            style: AppTextStyles.regular.copyWith(
                               fontSize: FontSizes.bodySmall(context),
-                              color: AppColors.primary,
-                              decoration: TextDecoration.underline,
+                              color: AppColors.primary.withValues(alpha: 0.8),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -625,37 +597,28 @@ class SearchInsightCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Text(
                   insight.claim,
-                  style: AppTextStyles.semiBold.copyWith(
+                  style: AppTextStyles.medium.copyWith(
                     fontSize: FontSizes.bodyMedium(context),
                     color: Colors.white,
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: verdictColor.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  insight.insights.verdict.toUpperCase(),
-                  style: AppTextStyles.bold.copyWith(
-                    fontSize: FontSizes.bodySmall(context),
-                    color: verdictColor,
-                  ),
+              const SizedBox(width: 12),
+              Text(
+                insight.insights.verdict.toUpperCase(),
+                style: AppTextStyles.semiBold.copyWith(
+                  fontSize: FontSizes.bodySmall(context),
+                  color: verdictColor,
                 ),
               ),
             ],
@@ -663,9 +626,9 @@ class SearchInsightCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             insight.insights.llmSummary,
-            style: AppTextStyles.medium.copyWith(
+            style: AppTextStyles.regular.copyWith(
               fontSize: FontSizes.bodyMedium(context),
-              color: Colors.white.withValues(alpha: 0.8),
+              color: Colors.white.withValues(alpha: 0.7),
               height: 1.5,
             ),
           ),
@@ -679,18 +642,17 @@ class SearchInsightCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.article_rounded,
-                        color: AppColors.primary,
-                        size: 16,
+                        IconsaxPlusLinear.document_text,
+                        color: AppColors.primary.withValues(alpha: 0.8),
+                        size: 14,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           source.title,
-                          style: AppTextStyles.medium.copyWith(
+                          style: AppTextStyles.regular.copyWith(
                             fontSize: FontSizes.bodySmall(context),
-                            color: AppColors.primary,
-                            decoration: TextDecoration.underline,
+                            color: AppColors.primary.withValues(alpha: 0.8),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -704,33 +666,25 @@ class SearchInsightCard extends StatelessWidget {
           ],
           if (insight.insights.notes.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    color: Colors.orange,
-                    size: 18,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      insight.insights.notes,
-                      style: AppTextStyles.medium.copyWith(
-                        fontSize: FontSizes.bodySmall(context),
-                        color: Colors.orange,
-                      ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  IconsaxPlusLinear.info_circle,
+                  color: Colors.orange.withValues(alpha: 0.8),
+                  size: 14,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    insight.insights.notes,
+                    style: AppTextStyles.regular.copyWith(
+                      fontSize: FontSizes.bodySmall(context),
+                      color: Colors.orange.withValues(alpha: 0.8),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ],

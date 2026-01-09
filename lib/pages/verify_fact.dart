@@ -143,7 +143,7 @@ class _VerifyFactState extends State<VerifyFact>
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: _scaffoldKey,
-        backgroundColor: const Color(0xFF0D1421),
+        backgroundColor: AppColors.background,
         drawer: const HistoryDrawer(),
         body: SafeArea(
           child: Column(
@@ -196,7 +196,6 @@ class _VerifyFactState extends State<VerifyFact>
               const Spacer(flex: 7),
               Container(
                 width: double.infinity,
-                height: 60,
                 decoration: BoxDecoration(
                   color: Colors.black87,
                   borderRadius: BorderRadius.only(
@@ -204,7 +203,7 @@ class _VerifyFactState extends State<VerifyFact>
                     topLeft: Radius.circular(20),
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.only(left: 16, right: 24, bottom: 10, top: 10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [

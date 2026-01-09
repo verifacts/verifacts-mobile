@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:verifacts/core/models/analysis.dart';
 import 'package:verifacts/core/network/configuration.dart';
 
@@ -13,6 +15,7 @@ class AnalysisService {
       Response response = await dio.post("/api/v1/analyze", data: payload);
       return Analysis.fromJson(response.data);
     } catch (e) {
+      log(e.toString());
       return null;
     }
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:verifacts/core/models/analysis.dart';
 import 'package:verifacts/core/ui/ui.dart';
@@ -101,89 +103,103 @@ class _ResultsState extends State<Results> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Skeletonizer(
-          enabled: loading,
-          child: CustomScrollView(
-            slivers: [
-              // App Bar
-              SliverAppBar(
-                floating: true,
-                backgroundColor: AppColors.background,
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                title: Text(
-                  'Analysis Results',
-                  style: AppTextStyles.bold.copyWith(
-                    fontSize: FontSizes.h3(context),
-                    color: Colors.white,
-                  ),
-                ),
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.only(left: 8, top: 8, right: 16),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(
+                      IconsaxPlusBroken.arrow_left,
+                      color: Colors.white,
+                      size: 26,
+                    ),
+                  ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.2),
+                  const Spacer(),
+                  Image.asset(
+                    "assets/images/logo_transparent.png",
+                    width: 40,
+                  ).animate().fadeIn(duration: 400.ms),
+                ],
               ),
+            ),
+            const SizedBox(height: 8),
 
-              // Content
-              SliverPadding(
-                padding: const EdgeInsets.all(20),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    // Input Summary
-                    if (widget.text != null || widget.url != null) ...[
-                      const SectionTitle(title: 'Input'),
-                      const SizedBox(height: 12),
-                      InputCard(text: widget.text, url: widget.url),
-                      const SizedBox(height: 24),
-                    ],
-
-                    // Source Identity
-                    const SectionTitle(title: 'Source Trustworthiness'),
-                    const SizedBox(height: 12),
-                    SourceIdentityCard(source: displayAnalysis.sourceIdentity),
+            // Content
+            Expanded(
+              child: Skeletonizer(
+                enabled: loading,
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  children: [
+                    // Overall Verdict - Hero section
+                    OverallVerdictCard(verdict: displayAnalysis.verdict)
+                        .animate()
+                        .fadeIn(duration: 500.ms, delay: 100.ms)
+                        .slideY(begin: 0.1),
                     const SizedBox(height: 24),
 
-                    // Overall Verdict
-                    const SectionTitle(title: 'Overall Verdict'),
+                    // Source Trustworthiness
+                    const SectionTitle(title: 'Source')
+                        .animate()
+                        .fadeIn(duration: 400.ms, delay: 200.ms),
                     const SizedBox(height: 12),
-                    OverallVerdictCard(verdict: displayAnalysis.verdict),
+                    SourceIdentityCard(source: displayAnalysis.sourceIdentity)
+                        .animate()
+                        .fadeIn(duration: 500.ms, delay: 250.ms)
+                        .slideY(begin: 0.05),
                     const SizedBox(height: 24),
 
                     // Claims
                     if (displayAnalysis.claims.isNotEmpty) ...[
                       SectionTitle(
-                        title:
-                            'Claims Analysis (${displayAnalysis.claims.length})',
-                      ),
+                        title: 'Claims (${displayAnalysis.claims.length})',
+                      ).animate().fadeIn(duration: 400.ms, delay: 300.ms),
                       const SizedBox(height: 12),
-                      ...displayAnalysis.claims.map(
-                        (claim) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: ClaimCard(claim: claim),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
+                      ...displayAnalysis.claims.asMap().entries.map(
+                            (entry) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: ClaimCard(claim: entry.value)
+                                  .animate()
+                                  .fadeIn(
+                                    duration: 500.ms,
+                                    delay: (350 + entry.key * 50).ms,
+                                  )
+                                  .slideY(begin: 0.05),
+                            ),
+                          ),
+                      const SizedBox(height: 16),
                     ],
 
                     // Search Insights
                     if (displayAnalysis.searchInsights.isNotEmpty) ...[
-                      const SectionTitle(title: 'Search Insights'),
+                      const SectionTitle(title: 'Insights')
+                          .animate()
+                          .fadeIn(duration: 400.ms, delay: 400.ms),
                       const SizedBox(height: 12),
-                      ...displayAnalysis.searchInsights.map(
-                        (insight) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: SearchInsightCard(insight: insight),
-                        ),
-                      ),
+                      ...displayAnalysis.searchInsights.asMap().entries.map(
+                            (entry) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: SearchInsightCard(insight: entry.value)
+                                  .animate()
+                                  .fadeIn(
+                                    duration: 500.ms,
+                                    delay: (450 + entry.key * 50).ms,
+                                  )
+                                  .slideY(begin: 0.05),
+                            ),
+                          ),
                     ],
 
                     const SizedBox(height: 40),
-                  ]),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

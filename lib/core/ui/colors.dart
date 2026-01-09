@@ -7,7 +7,7 @@ class AppColors {
 
   static const Color success = Color(0xFF07B042);
 
-  static const Color background = Color(0xFF01030D);
+  static const Color background = Color(0xFF0D1421);
 
   static const Color light = Color(0xFFE0E0E0);
 

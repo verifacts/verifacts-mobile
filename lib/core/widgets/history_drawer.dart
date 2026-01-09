@@ -117,7 +117,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                padding: const EdgeInsets.fromLTRB(24, 24, 16, 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -133,7 +133,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${history.length} searches',
+                          '${history.length} search${history.length == 1 ? '' : 'es'}',
                           style: AppTextStyles.regular.copyWith(
                             fontSize: 14,
                             color: Colors.white38,
@@ -144,14 +144,9 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                     if (history.isNotEmpty)
                       IconButton(
                         onPressed: clearAll,
-                        icon: const Icon(Icons.delete_outline_rounded),
-                        color: Colors.white38,
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withValues(alpha: 0.05),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                        icon: const Icon(IconsaxPlusBold.trash),
+                        color: AppColors.primary,
+                        iconSize: 20,
                       ),
                   ],
                 ),

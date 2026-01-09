@@ -46,7 +46,7 @@ class Analysis {
 
 class SourceIdentity {
   final String trustLevel;
-  final int score;
+  final double score;
   final List<String> redFlags;
   final String summary;
 
@@ -60,7 +60,7 @@ class SourceIdentity {
   factory SourceIdentity.fromJson(Map<String, dynamic> json) {
     return SourceIdentity(
       trustLevel: json['trust_level'] as String? ?? '',
-      score: json['score'] as int? ?? 0,
+      score: json['score'] as double? ?? 0.0,
       redFlags:
           (json['red_flags'] as List<dynamic>?)
               ?.map((e) => e as String)
