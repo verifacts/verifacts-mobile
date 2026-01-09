@@ -42,67 +42,65 @@ class InputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Skeleton.ignore(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (text != null && text!.isNotEmpty) ...[
-              Row(
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (text != null && text!.isNotEmpty) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  IconsaxPlusLinear.text,
+                  color: Colors.white.withValues(alpha: 0.4),
+                  size: 16,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    text!,
+                    style: AppTextStyles.regular.copyWith(
+                      fontSize: FontSizes.bodyMedium(context),
+                      color: Colors.white.withValues(alpha: 0.7),
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (url != null && url!.isNotEmpty) const SizedBox(height: 12),
+          ],
+          if (url != null && url!.isNotEmpty) ...[
+            GestureDetector(
+              onTap: () => _launchUrl(context, url!),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    IconsaxPlusLinear.text,
-                    color: Colors.white.withValues(alpha: 0.4),
+                    IconsaxPlusLinear.link_2,
+                    color: AppColors.primary.withValues(alpha: 0.6),
                     size: 16,
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      text!,
+                      url!,
                       style: AppTextStyles.regular.copyWith(
-                        fontSize: FontSizes.bodyMedium(context),
-                        color: Colors.white.withValues(alpha: 0.7),
-                        height: 1.5,
+                        fontSize: FontSizes.bodySmall(context),
+                        color: AppColors.primary.withValues(alpha: 0.7),
                       ),
                     ),
                   ),
                 ],
               ),
-              if (url != null && url!.isNotEmpty) const SizedBox(height: 12),
-            ],
-            if (url != null && url!.isNotEmpty) ...[
-              GestureDetector(
-                onTap: () => _launchUrl(context, url!),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      IconsaxPlusLinear.link_2,
-                      color: AppColors.primary.withValues(alpha: 0.6),
-                      size: 16,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        url!,
-                        style: AppTextStyles.regular.copyWith(
-                          fontSize: FontSizes.bodySmall(context),
-                          color: AppColors.primary.withValues(alpha: 0.7),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ],
-        ),
+        ],
       ),
     );
   }
@@ -271,8 +269,8 @@ class OverallVerdictCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final verdictColor = getVerdictColor(verdict.overallVerdict);
-    final verdictIcon = getVerdictIcon(verdict.overallVerdict);
+    Color verdictColor = getVerdictColor(verdict.overallVerdict);
+    IconData verdictIcon = getVerdictIcon(verdict.overallVerdict);
 
     return Column(
       children: [
@@ -280,7 +278,7 @@ class OverallVerdictCard extends StatelessWidget {
         Icon(verdictIcon, color: verdictColor, size: 64),
         const SizedBox(height: 16),
         Text(
-          verdict.overallVerdict.toUpperCase(),
+          verdict.overallVerdict.toUpperCase().replaceAll("_", " "),
           style: AppTextStyles.bold.copyWith(
             fontSize: FontSizes.h1(context),
             color: verdictColor,

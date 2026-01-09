@@ -83,7 +83,7 @@ class SourceIdentity {
 class Claim {
   final String claim;
   final String verdict;
-  final int confidence;
+  final double confidence;
   final String explanation;
   final List<String> sources;
 
@@ -99,7 +99,7 @@ class Claim {
     return Claim(
       claim: json['claim'] as String? ?? '',
       verdict: json['verdict'] as String? ?? '',
-      confidence: json['confidence'] as int? ?? 0,
+      confidence: json['confidence'] as double? ?? 0,
       explanation: json['explanation'] as String? ?? '',
       sources:
           (json['sources'] as List<dynamic>?)
