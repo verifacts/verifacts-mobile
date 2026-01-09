@@ -176,7 +176,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               hintStyle:
                   widget.hintStyle ??
                   AppTextStyles.regular.copyWith(
-                    color: const Color(0xFFB1B2B9),
+                    color: const Color(0xFF8E8F9B),
                     fontSize: FontSizes.bodyLarge(context),
                     fontWeight: widget.hintFontWeight,
                   ),

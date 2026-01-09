@@ -4,12 +4,14 @@ import 'package:verifacts/core/models/analysis.dart';
 import 'package:verifacts/core/ui/ui.dart';
 import 'package:verifacts/pages/widgets/results_widgets.dart';
 import 'package:verifacts/services/analysis_service.dart';
+import 'package:verifacts/services/database_service.dart';
 
 class Results extends StatefulWidget {
   final String? text;
   final String? url;
+  final Analysis? cachedAnalysis;
 
-  const Results({super.key, this.text, this.url});
+  const Results({super.key, this.text, this.url, this.cachedAnalysis});
 
   @override
   State<Results> createState() => _ResultsState();
@@ -56,10 +58,37 @@ class _ResultsState extends State<Results> {
   }
 
   Future<void> checkAnalysis() async {
+    if (widget.cachedAnalysis != null) {
+      analysis = widget.cachedAnalysis;
+      loading = false;
+      setState(() {});
+      return;
+    }
+
+    final existing = await DatabaseService.findExistingAnalysis(
+      text: widget.text,
+      url: widget.url,
+    );
+
+    if (existing != null) {
+      analysis = existing.analysis;
+      loading = false;
+      setState(() {});
+      return;
+    }
+
     analysis = await AnalysisService.analyze(
       url: widget.url,
       selection: widget.text,
     );
+
+    if (analysis != null) {
+      await DatabaseService.saveAnalysis(
+        text: widget.text,
+        url: widget.url,
+        analysis: analysis!,
+      );
+    }
 
     loading = false;
     setState(() {});

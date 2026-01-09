@@ -1,5 +1,4 @@
 import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share_handler/share_handler.dart';
 import 'package:verifacts/core/network/configuration.dart';
@@ -28,7 +27,7 @@ Future<void> main() async {
 
   runApp(
     DevicePreview(
-      enabled: kDebugMode,
+      enabled: false, // kDebugMode,
       builder: (_) {
         if (media != null) {
           final (url, text) = handleIncomingMedia(media);
