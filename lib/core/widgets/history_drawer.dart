@@ -94,15 +94,31 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
     switch (verdict.toLowerCase()) {
       case 'verified':
       case 'true':
-        return AppColors.primary;
+        return AppColors.success;
       case 'debunked':
       case 'false':
         return AppColors.error;
       case 'mixed':
       case 'partially_true':
-        return Colors.amber;
+        return Colors.orange;
       default:
-        return Colors.grey;
+        return AppColors.grey;
+    }
+  }
+
+  IconData getVerdictIcon(String verdict) {
+    switch (verdict.toLowerCase()) {
+      case 'verified':
+      case 'true':
+        return IconsaxPlusBold.tick_circle;
+      case 'debunked':
+      case 'false':
+        return IconsaxPlusBold.close_circle;
+      case 'mixed':
+      case 'partially_true':
+        return IconsaxPlusBold.warning_2;
+      default:
+        return IconsaxPlusBold.info_circle;
     }
   }
 
@@ -111,41 +127,36 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
     return Drawer(
       backgroundColor: Colors.transparent,
       child: Container(
-        color: const Color(0xFF0D1421),
+        color: AppColors.background,
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 16, 16),
+                padding: const EdgeInsets.fromLTRB(20, 20, 12, 8),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'History',
-                          style: AppTextStyles.bold.copyWith(
-                            fontSize: 24,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${history.length} search${history.length == 1 ? '' : 'es'}',
-                          style: AppTextStyles.regular.copyWith(
-                            fontSize: 14,
-                            color: Colors.white38,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'History',
+                      style: AppTextStyles.bold.copyWith(
+                        fontSize: FontSizes.h2(context),
+                        color: Colors.white,
+                      ),
                     ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${history.length}',
+                      style: AppTextStyles.medium.copyWith(
+                        fontSize: FontSizes.bodyMedium(context),
+                        color: Colors.white.withValues(alpha: 0.4),
+                      ),
+                    ),
+                    const Spacer(),
                     if (history.isNotEmpty)
                       IconButton(
                         onPressed: clearAll,
-                        icon: const Icon(IconsaxPlusBold.trash),
-                        color: AppColors.primary,
+                        icon: const Icon(IconsaxPlusLinear.trash),
+                        color: Colors.white.withValues(alpha: 0.4),
                         iconSize: 20,
                       ),
                   ],
@@ -160,8 +171,8 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                         ),
                       )
                     : history.isEmpty
-                    ? _buildEmptyState()
-                    : _buildHistoryList(),
+                        ? _buildEmptyState()
+                        : _buildHistoryList(),
               ),
             ],
           ),
@@ -175,21 +186,25 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(IconsaxPlusBold.info_circle, size: 40, color: AppColors.primary),
-          const SizedBox(height: 20),
+          Icon(
+            IconsaxPlusLinear.clock,
+            size: 48,
+            color: Colors.white.withValues(alpha: 0.2),
+          ),
+          const SizedBox(height: 16),
           Text(
             'No history yet',
-            style: AppTextStyles.semiBold.copyWith(
-              fontSize: 18,
-              color: Colors.white70,
+            style: AppTextStyles.medium.copyWith(
+              fontSize: FontSizes.bodyLarge(context),
+              color: Colors.white.withValues(alpha: 0.5),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             'Your searches will appear here',
             style: AppTextStyles.regular.copyWith(
-              fontSize: 14,
-              color: Colors.white38,
+              fontSize: FontSizes.bodySmall(context),
+              color: Colors.white.withValues(alpha: 0.3),
             ),
           ),
         ],
@@ -199,132 +214,78 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
 
   Widget _buildHistoryList() {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       itemCount: history.length,
       itemBuilder: (context, index) {
         AnalysisHistory item = history[index];
         Color verdictColor = getVerdictColor(
           item.analysis.verdict.overallVerdict,
         );
-        DateFormat dateFormat = DateFormat('MMM d, h:mm a');
+        IconData verdictIcon = getVerdictIcon(
+          item.analysis.verdict.overallVerdict,
+        );
+        DateFormat dateFormat = DateFormat('MMM d');
 
         return Dismissible(
           key: Key('history_${item.id}'),
           direction: DismissDirection.endToStart,
           onDismissed: (_) => deleteItem(item.id!),
           background: Container(
-            margin: const EdgeInsets.only(bottom: 12),
+            margin: const EdgeInsets.only(bottom: 8),
             decoration: BoxDecoration(
-              color: AppColors.error.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.error.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
             alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 20),
-            child: const Icon(Icons.delete_rounded, color: AppColors.error),
+            padding: const EdgeInsets.only(right: 16),
+            child: Icon(
+              IconsaxPlusLinear.trash,
+              color: AppColors.error.withValues(alpha: 0.8),
+              size: 20,
+            ),
           ),
-          child:
-              GestureDetector(
-                onTap: () => openHistoryItem(item),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.08),
-                        Colors.white.withValues(alpha: 0.03),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: verdictColor.withValues(alpha: 0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
+          child: GestureDetector(
+            onTap: () => openHistoryItem(item),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(verdictIcon, color: verdictColor, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            // Verdict indicator
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: verdictColor.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  item.verdictEmoji,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: verdictColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            // Title
-                            Expanded(
-                              child: Text(
-                                item.displayTitle,
-                                style: AppTextStyles.medium.copyWith(
-                                  fontSize: 14,
-                                  color: Colors.white.withValues(alpha: 0.9),
-                                  height: 1.3,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            // Arrow
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 14,
-                              color: Colors.white.withValues(alpha: 0.3),
-                            ),
-                          ],
+                        Text(
+                          item.displayTitle,
+                          style: AppTextStyles.medium.copyWith(
+                            fontSize: FontSizes.bodyMedium(context),
+                            color: Colors.white.withValues(alpha: 0.9),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 12),
-                        // Footer
+                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
-                              Icons.access_time_rounded,
-                              size: 12,
-                              color: Colors.white.withValues(alpha: 0.3),
+                            Text(
+                              item.analysis.verdict.overallVerdict.toUpperCase(),
+                              style: AppTextStyles.semiBold.copyWith(
+                                fontSize: FontSizes.bodySmall(context) - 1,
+                                color: verdictColor,
+                              ),
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: 8),
                             Text(
                               dateFormat.format(item.createdAt),
                               style: AppTextStyles.regular.copyWith(
-                                fontSize: 11,
+                                fontSize: FontSizes.bodySmall(context) - 1,
                                 color: Colors.white.withValues(alpha: 0.3),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 3,
-                              ),
-                              decoration: BoxDecoration(
-                                color: verdictColor.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                item.analysis.verdict.overallVerdict
-                                    .toUpperCase(),
-                                style: AppTextStyles.semiBold.copyWith(
-                                  fontSize: 9,
-                                  color: verdictColor,
-                                  letterSpacing: 0.5,
-                                ),
                               ),
                             ),
                           ],
@@ -332,10 +293,17 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                       ],
                     ),
                   ),
-                ),
-              ).animate().fadeIn(
-                duration: const Duration(milliseconds: 300),
-                delay: Duration(milliseconds: index * 50),
+                  Icon(
+                    IconsaxPlusLinear.arrow_right_3,
+                    size: 16,
+                    color: Colors.white.withValues(alpha: 0.3),
+                  ),
+                ],
+              ),
+            ),
+          ).animate().fadeIn(
+                duration: 300.ms,
+                delay: (index * 40).ms,
               ),
         );
       },
