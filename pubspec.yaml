@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  device_preview:
   dio:
   flex_color_scheme:
   flutter_animate:

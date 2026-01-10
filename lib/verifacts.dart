@@ -1,8 +1,12 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:share_handler/share_handler.dart';
 import 'package:verifacts/core/ui/themes.dart';
+import 'package:verifacts/core/utils/functions.dart';
 import 'package:verifacts/core/utils/responsive.dart';
+import 'package:verifacts/main.dart';
+import 'package:verifacts/pages/results.dart';
 import 'package:verifacts/pages/verify_fact.dart';
 
 class Verifacts extends StatefulWidget {
@@ -16,6 +20,32 @@ class Verifacts extends StatefulWidget {
 
 class _VerifactsState extends State<Verifacts> {
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShareHandlerPlatform handler = ShareHandlerPlatform.instance;
+
+      handler.sharedMediaStream.listen(navigate);
+
+      if (media != null) {
+        navigate(media!);
+      }
+    });
+  }
+
+  void navigate(SharedMedia media) {
+    Verifacts.navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (_) {
+          final (url, text) = handleIncomingMedia(media);
+          return Results(url: url, text: text);
+        },
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Verifacts",
@@ -24,9 +54,8 @@ class _VerifactsState extends State<Verifacts> {
       themeMode: ThemeMode.dark,
       theme: themeData,
       builder: (context, child) {
-        child = DevicePreview.appBuilder(context, child);
         return ResponsiveBreakpoints.builder(
-          child: child,
+          child: child!,
           breakpoints: [
             const Breakpoint(
               start: 0,
@@ -59,4 +88,11 @@ class _VerifactsState extends State<Verifacts> {
       home: const VerifyFact(),
     );
   }
+}
+
+(String, String) handleIncomingMedia(SharedMedia? media) {
+  String url = extractUrl(media?.content ?? "") ?? "";
+  String text = removeUrl(media?.content ?? "");
+
+  return (url, text);
 }
