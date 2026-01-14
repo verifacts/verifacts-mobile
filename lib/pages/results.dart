@@ -24,6 +24,7 @@ class Results extends StatefulWidget {
 class _ResultsState extends State<Results> {
   bool loading = true;
   bool hasError = false;
+  String? error;
   Analysis? analysis;
 
   Analysis mockAnalysis = Analysis(
@@ -87,10 +88,13 @@ class _ResultsState extends State<Results> {
       return;
     }
 
-    analysis = await AnalysisService.analyze(
+    var (a, e) = await AnalysisService.analyze(
       url: widget.url,
       selection: widget.text,
     );
+
+    analysis = a;
+    error = e;
 
     if (analysis != null) {
       await DatabaseService.saveAnalysis(
@@ -250,7 +254,7 @@ class _ResultsState extends State<Results> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Something went wrong while analyzing.\nPlease check your connection and try again.',
+              'Something went wrong while analyzing.\n${error ?? "Please try again."}',
               textAlign: TextAlign.center,
               style: AppTextStyles.regular.copyWith(
                 fontSize: FontSizes.bodyMedium(context),

@@ -4,7 +4,9 @@ import 'package:verifacts/core/models/analysis.dart';
 import 'package:verifacts/core/network/configuration.dart';
 
 class AnalysisService {
-  static Future<Analysis?> analyze({String? url, String? selection}) async {
+  static Future<(Analysis?, String?)> analyze({String? url, String? selection}) async {
+    String? error;
+
     try {
       Map<String, dynamic> payload = {
         if (url != null) "url": url,
@@ -13,10 +15,13 @@ class AnalysisService {
       };
 
       Response response = await dio.post("/api/v1/analyze", data: payload);
-      return Analysis.fromJson(response.data);
+      return (Analysis.fromJson(response.data), error);
+    } on DioException catch(e) {
+      error = determineDioError(e);
     } catch (e) {
-      log(e.toString());
-      return null;
+      error = e.toString();
     }
+
+    return (null, error);
   }
 }
